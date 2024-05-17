@@ -132,8 +132,8 @@ export default function Game() {
                     />
                     <button
                         type="submit"
-                        className="bg-green-400 text-white py-2 font-black px-8 rounded-lg hover:bg-green-600 duration-500 ease-in-out"
-                        disabled={isCreating}
+                        className="bg-green-400 text-white py-2 font-black px-8 rounded-lg hover:bg-green-600 duration-500 ease-in-out disabled:cursor-not-allowed cursor-pointer"
+                        disabled={isCreating || prompt.trim() === ""}
                     >
                         {isCreating ? "Loading..." : "Create Board"}
                     </button>
@@ -163,7 +163,8 @@ export default function Game() {
             </div>
             <div className="w-full flex justify-center">
                 <button
-                    className="bg-blue-400 text-white py-2 mx-2 mt-4 font-black px-8 rounded-lg hover:bg-blue-600 duration-500 ease-in-out"
+                    className="bg-blue-400 text-white py-2 mx-2 mt-4 font-black px-8 rounded-lg hover:bg-blue-600 duration-500 ease-in-out disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+                    disabled={selectedImage === null}
                     onClick={() => createBoard(prompt)}
                 >
                     Submit
