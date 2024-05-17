@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegImage } from "react-icons/fa6";
+
+import { create } from "@/app/game/backend";
 
 const delays = [
     "animation-delay-0",
@@ -14,6 +16,19 @@ const delays = [
 
 export default function Game() {
     const [how, setHow] = useState(true);
+    const [board, setBoard] = useState<string[]>([]);
+
+    useEffect(() => {
+        // choose 6 random images from data
+        // create().then((data) => console.log(data));
+        create().then((data) => {
+            // choose 6 random images from data
+            const randImages = [...data].sort(() => Math.random() - 0.5);
+            const images = randImages.slice(0, 6);
+            
+            setBoard(images);
+        });
+    });
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -44,6 +59,7 @@ export default function Game() {
                             Start Game
                         </button>
                     </div>
+                    {/* create a board */}
                 </div>
             )}
         </main>
