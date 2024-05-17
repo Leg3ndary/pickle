@@ -25,6 +25,17 @@ export default function Game() {
     const [how, setHow] = useState(true);
     const [board, setBoard] = useState<GoogleImage[]>([]);
     const [isCreating, setIsCreating] = useState(false);
+    const [prompt, setPrompt] = useState("");
+    const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+    const handleImageClick = (img: number) => {
+        setSelectedImage(img);
+    };
+
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+        e.preventDefault();
+        createBoard(prompt);
+    };
 
     const getValidURLS = async (GoogleImages: GoogleImage[]) => {
         const checkUrl = async (image: GoogleImage) => {
@@ -51,34 +62,26 @@ export default function Game() {
         return validUrls.slice(0, 5);
     };
 
-    const createBoard = () => {
+    const createBoard = (prompt: string) => {
         console.log("Attempting to create board");
         setIsCreating(true);
-        create()
-            .then((data) => {
-                console.log(data);
-                if (data && data.length > 0) {
-                    const images = [...data].sort(() => Math.random() - 0.5);
-                    getValidURLS(images).then((validImages) => {
-                        setBoard(validImages);
-                    });
-                } else {
-                    console.log("No data received from create");
-                }
-            })
-            .finally(() => {
+        create(prompt).then((data) => {
+            console.log(data);
+            if (data && data.length > 0) {
+                const images = [...data].sort(() => Math.random() - 0.5);
+                getValidURLS(images).then((validImages) => {
+                    setBoard(validImages);
+                });
                 setIsCreating(false);
-            });
+            } else {
+                console.log("No data received from create");
+                createBoard(prompt);
+            }
+        });
     };
 
-    // useEffect(() => {
-    //     if (!board.length && !isCreating) {
-    //         createBoard();
-    //     }
-    // }, [board, isCreating]);
-
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main className="flex min-h-screen flex-col items-center p-24">
             <AnimatePresence>
                 {how && (
                     <motion.div
@@ -118,36 +121,53 @@ export default function Game() {
             </AnimatePresence>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-4xl font-bold m-4">Guess the AI image</h1>
-                <input
-                    type="text"
-                    placeholder="Enter a prompt"
-                    className="w-96 h-10 m-4 p-2 rounded-lg border-2 border-slate-200"
-                    id="prompt"
-                />
-                <button
-                    className="bg-green-400 text-white py-2 font-black px-8 rounded-lg hover:bg-green-600 duration-500 ease-in-out"
-                    onClick={() => createBoard()}
-                >
-                    {isCreating ? "Loading..." : "Create Board"}
-                </button>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        placeholder="Enter a prompt"
+                        className="w-96 h-10 m-4 p-2 rounded-lg border-2 border-slate-200"
+                        id="prompt"
+                        value={prompt}
+                        onChange={(e) => setPrompt(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        className="bg-green-400 text-white py-2 font-black px-8 rounded-lg hover:bg-green-600 duration-500 ease-in-out"
+                        disabled={isCreating}
+                    >
+                        {isCreating ? "Loading..." : "Create Board"}
+                    </button>
+                </form>
             </div>
-            <div className="grid grid-flow-row grid-cols-3 grid-rows-2 gap-x-20 gap-y-10 p-8 pb-2 items-center justify-items-center">
+            <div className="grid grid-flow-row grid-cols-2 gap-x-20 gap-y-10 p-8 pb-2 items-center justify-items-center">
                 {board.map((img, i) => (
                     <div
-                        className={`h-24 w-40 bg-slate-200 rounded-lg flex justify-center items-center animate-bspin animation-delay-${
-                            i * 300
-                        }`}
+                        className={`h-36 w-52 rounded-lg block justify-center items-center `}
                         key={i}
                     >
                         <img
+                            key={i}
                             src={img.url}
                             height={img.height}
                             width={img.width}
                             alt={"image"}
-                            className="h-24 w-40 object-cover rounded-lg"
+                            className={`h-36 w-52 object-cover rounded-md border-4 border-transparent cursor-pointer ${
+                                selectedImage === i
+                                    ? "border-blue-600"
+                                    : "hover:border-blue-600"
+                            } duration-300 ease-in-out`}
+                            onClick={() => handleImageClick(i)}
                         />
                     </div>
                 ))}
+            </div>
+            <div className="w-full flex justify-center">
+                <button
+                    className="bg-blue-400 text-white py-2 mx-2 mt-4 font-black px-8 rounded-lg hover:bg-blue-600 duration-500 ease-in-out"
+                    onClick={() => createBoard(prompt)}
+                >
+                    Submit
+                </button>
             </div>
         </main>
     );
