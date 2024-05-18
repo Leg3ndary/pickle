@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { FaRegImage } from "react-icons/fa6";
 
-import { create } from "@/app/game/backend";
+import { create, generate } from "@/app/game/backend";
 import { AnimatePresence, motion } from "framer-motion";
 
 const delays = [
@@ -27,10 +27,6 @@ export default function Game() {
     const [isCreating, setIsCreating] = useState(false);
     const [prompt, setPrompt] = useState("");
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
-
-    const handleImageClick = (img: number) => {
-        setSelectedImage(img);
-    };
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -65,6 +61,16 @@ export default function Game() {
     const createBoard = (prompt: string) => {
         console.log("Attempting to create board");
         setIsCreating(true);
+        generate(prompt).then((data) => {
+            console.log(data);
+            if (data) {
+                setBoard([{ url: data, height: 1024, width: 1024 }]);
+                setIsCreating(false);
+            } else {
+                console.log("No data received from generate");
+                createBoard(prompt);
+            }
+        });
         create(prompt).then((data) => {
             console.log(data);
             if (data && data.length > 0) {
@@ -151,12 +157,12 @@ export default function Game() {
                             height={img.height}
                             width={img.width}
                             alt={"image"}
-                            className={`h-36 w-52 object-cover rounded-md border-4 border-transparent cursor-pointer ${
-                                selectedImage === i
+                            className={`h-36 w-52 object-cover rounded-md border-4 cursor-pointer ${
+                                selectedImage == i
                                     ? "border-blue-600"
                                     : "hover:border-blue-600"
                             } duration-300 ease-in-out`}
-                            onClick={() => handleImageClick(i)}
+                            onClick={() => setSelectedImage(i)}
                         />
                     </div>
                 ))}
@@ -165,7 +171,9 @@ export default function Game() {
                 <button
                     className="bg-blue-400 text-white py-2 mx-2 mt-4 font-black px-8 rounded-lg hover:bg-blue-600 duration-500 ease-in-out disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
                     disabled={selectedImage === null}
-                    onClick={() => createBoard(prompt)}
+                    onClick={() => {
+                        console.log("Selected image", selectedImage);
+                    }}
                 >
                     Submit
                 </button>

@@ -1,4 +1,5 @@
 "use server";
+// import OpenAI from "openai";
 import gis from "async-g-i-s";
 
 export async function create(prompt: string) {
@@ -9,3 +10,20 @@ export async function create(prompt: string) {
     });
     return data;
 }
+
+
+// const openai = new OpenAI({
+//     apiKey: process.env.apikey,
+// });
+
+// export async function generate(prompt: string) {
+//     const response = await openai.images.generate({
+//         model: "dall-e-3",
+//         prompt: prompt,
+//         n: 1,
+//         size: "1024x1024",
+//       });
+//       console.log(response);
+//     return response.data[0].url;
+// }
+
