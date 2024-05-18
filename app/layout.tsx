@@ -22,10 +22,7 @@ export default function RootLayout({
                     <h1 className="text-white font-black text-2xl"><Link href="/">Pickle</Link></h1>
                     <ul className="flex space-x-4 text-white ml-auto font-bold">
                         <li>
-                            <Link href="/about">About</Link>
-                        </li>
-                        <li>
-                            <Link href="/game">New Game</Link>
+                            <Link href="/game" prefetch={false} className="transition-colors duration-500 hover:text-purple-500">New Game</Link>
                         </li>
                     </ul>
                 </nav>

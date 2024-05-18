@@ -11,6 +11,7 @@
     },
     "dependencies": {
         "async-g-i-s": "^1.5.2",
+        "canvas-confetti": "^1.9.3",
         "framer-motion": "^11.2.4",
         "next": "14.2.3",
         "react": "^18",
@@ -19,6 +20,7 @@
         "tailwindcss-animation-delay": "^1.2.0"
     },
     "devDependencies": {
+        "@types/canvas-confetti": "^1.6.4",
         "@types/node": "^20",
         "@types/react": "^18",
         "@types/react-dom": "^18",
