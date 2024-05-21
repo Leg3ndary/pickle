@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { FaRegImage } from "react-icons/fa6";
 
-import { create, generate } from "@/app/game/backend";
+import { create, generate, sendData } from "@/app/game/backend";
 import { AnimatePresence, motion } from "framer-motion";
 import Confetti from "@/components/Confetti";
+import OpenAI from "openai";
 
 const delays = [
     "animation-delay-0",
@@ -73,7 +74,7 @@ export default function Game() {
                 let newImage: GoogleImage = { url: data.url as string, height: 800, width: 600, ai: true };
                 validUrls.push(newImage);
 
-                // sendData(prompt, validUrls as GoogleImage[], data as string);
+                sendData(prompt, validUrls as GoogleImage[], data);
             } else {
                 console.log("No data received from generate");
                 createBoard(prompt);
@@ -94,7 +95,6 @@ export default function Game() {
                 );
                 let newBoard: GoogleImage[] = [];
                 getValidURLS(images).then((validImages) => {
-                    // setBoard(validImages as GoogleImage[]);
                     newBoard = (validImages as GoogleImage[]).sort(
                         () => Math.random() - 0.5
                     );
