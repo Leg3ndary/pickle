@@ -196,7 +196,7 @@ export default function Game() {
                 <div className="grid grid-flow-row grid-cols-3 gap-x-20 gap-y-10 p-8 pb-2 items-center justify-items-center">
                     {board.map((img, i) => (
                         <div
-                            className={`h-36 w-52 rounded-lg block justify-center items-center `}
+                            className={`h-48 w-64 rounded-lg block justify-center items-center `}
                             key={i}
                         >
                             <img
@@ -205,7 +205,7 @@ export default function Game() {
                                 height={img.height}
                                 width={img.width}
                                 alt={"image"}
-                                className={`h-36 w-52 object-cover rounded-md border-4 cursor-pointer ${
+                                className={`h-48 w-64 object-cover rounded-md border-4 cursor-pointer ${
                                     selectedImage == i
                                         ? "border-blue-600"
                                         : "hover:border-blue-600"
