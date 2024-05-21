@@ -31,6 +31,8 @@ export default function Game() {
     const [selectedImage, setSelectedImage] = useState<number | null>(null);
     const [doConfetti, setDoConfetti] = useState<boolean>(false);
     const [updatePoints, setUpdatePoints] = useState<boolean>(false);
+    const [score, setScore] = useState<number>(0);
+    const [flashRed, setFlashRed] = useState<boolean>(false);
 
     const handleCreate: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -97,6 +99,7 @@ export default function Game() {
         if (selectedImage !== null) {
             if (board[selectedImage].ai) {
                 console.log("Correct!");
+                setScore(score + 100);
                 setDoConfetti(true);
                 setUpdatePoints(true);
                 setTimeout(() => {
@@ -105,6 +108,11 @@ export default function Game() {
                 }, 2500);
             } else {
                 console.log("Incorrect!");
+                setScore(score - 50);
+                setFlashRed(true);
+                setTimeout(() => {
+                    setFlashRed(false);
+                }, 400);
             }
         }
     };
@@ -153,6 +161,20 @@ export default function Game() {
                     <h1 className="text-4xl font-bold m-4">
                         Guess the AI image
                     </h1>
+                    <p className="text-lg text-center font-bold">
+                        Score:{" "}
+                        <span
+                            className={`${
+                                score == 0
+                                    ? "text-black"
+                                    : score > 0
+                                    ? "text-green-400"
+                                    : "text-red-500"
+                            }`}
+                        >
+                            {score}
+                        </span>
+                    </p>
                     <form onSubmit={handleCreate}>
                         <input
                             type="text"
@@ -215,7 +237,22 @@ export default function Game() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-green-500 text-5xl font-black">+100</h2>
+                        <h2 className="text-green-500 text-5xl font-black">
+                            +100
+                        </h2>
+                    </motion.div>
+                )}
+                {flashRed && (
+                    <motion.div
+                        className="w-screen h-screen top-0 fixed left-0 bg-[#FF000050] flex items-center justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4 }}
+                    >
+                        <h2 className="text-white text-5xl font-black">
+                            -50
+                        </h2>
                     </motion.div>
                 )}
             </AnimatePresence>
