@@ -52,40 +52,45 @@ export default function Game() {
             return null;
         };
 
-        const validUrls = [];
+        let validUrls = [];
         let index = 0;
 
-        while (validUrls.length < 9 && index < GoogleImages.length) {
+        while (validUrls.length < 8 && index < GoogleImages.length) {
             const batch = GoogleImages.slice(index, index + 5);
             const results = await Promise.all(batch.map(checkUrl));
             validUrls.push(...results.filter((result) => result !== null));
             index += 5;
         }
-        return validUrls.slice(0, 9);
+        validUrls = validUrls.slice(0, 8);
+        await generate(prompt).then((data: string | undefined) => {
+            console.log(data);
+            if (data) {
+                let newImage: GoogleImage = { url: data, height: 800, width: 600, ai: true };
+                validUrls.push(newImage);
+            } else {
+                console.log("No data received from generate");
+                createBoard(prompt);
+            }
+        });
+        return validUrls;
     };
 
     const createBoard = (prompt: string) => {
         console.log("Attempting to create board");
         setIsCreating(true);
-        // generate(prompt).then((data) => {
-        //     console.log(data);
-        //     if (data) {
-        //         setBoard([{ url: data, height: 1024, width: 1024 }]);
-        //         setIsCreating(false);
-        //     } else {
-        //         console.log("No data received from generate");
-        //         createBoard(prompt);
-        //     }
-        // });
         create(prompt).then((data) => {
             console.log(data);
             if (data && data.length > 0) {
                 let images = [...data.slice(0, 75)].sort(
                     () => Math.random() - 0.5
                 );
+                let newBoard: GoogleImage[] = [];
                 getValidURLS(images).then((validImages) => {
-                    validImages[8].ai = true; // testing
-                    setBoard(validImages);
+                    // setBoard(validImages as GoogleImage[]);
+                    newBoard = (validImages as GoogleImage[]).sort(
+                        () => Math.random() - 0.5
+                    );
+                    setBoard(newBoard);
                 });
                 setIsCreating(false);
             } else {
