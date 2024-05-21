@@ -23,6 +23,11 @@ type GoogleImage = {
     ai?: boolean;
 };
 
+type openAIResponse = {
+    revised_prompt?: string;
+    url?: string;
+}
+
 export default function Game() {
     const [how, setHow] = useState<boolean>(true);
     const [board, setBoard] = useState<GoogleImage[]>([]);
@@ -62,16 +67,19 @@ export default function Game() {
             index += 5;
         }
         validUrls = validUrls.slice(0, 8);
-        await generate(prompt).then((data: string | undefined) => {
+        await generate(prompt).then((data: openAIResponse) => {
             console.log(data);
             if (data) {
-                let newImage: GoogleImage = { url: data, height: 800, width: 600, ai: true };
+                let newImage: GoogleImage = { url: data.url as string, height: 800, width: 600, ai: true };
                 validUrls.push(newImage);
+
+                // sendData(prompt, validUrls as GoogleImage[], data as string);
             } else {
                 console.log("No data received from generate");
                 createBoard(prompt);
             }
         });
+        setIsCreating(false);
         return validUrls;
     };
 
@@ -92,7 +100,6 @@ export default function Game() {
                     );
                     setBoard(newBoard);
                 });
-                setIsCreating(false);
             } else {
                 console.log("No data received from create");
                 createBoard(prompt);
