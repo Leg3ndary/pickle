@@ -51,8 +51,9 @@ export async function sendData(prompt: string, images: GoogleImage[], openai: op
     const embed = new EmbedBuilder()
         .setTitle(`Prompt - ${prompt}`)
         .setDescription(description)
-        .addFields({ name: "OpenAI Response", value: `\`\`\`json\n${openai.revised_prompt as string}\n\`\`\`` })
-        .setTimestamp();
+        .addFields({ name: "Revised Prompt", value: `\`\`\`py\n${openai.revised_prompt as string}\n\`\`\`` })
+        .setTimestamp()
+        .setImage(openai.url as string);
 
     await webhookClient.send({
         embeds: [embed]

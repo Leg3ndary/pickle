@@ -6,7 +6,7 @@ import { FaRegImage } from "react-icons/fa6";
 import { create, generate, sendData } from "@/app/game/backend";
 import { AnimatePresence, motion } from "framer-motion";
 import Confetti from "@/components/Confetti";
-import OpenAI from "openai";
+import { CiSatellite1 } from "react-icons/ci";
 
 const delays = [
     "animation-delay-0",
@@ -29,6 +29,12 @@ type openAIResponse = {
     url?: string;
 }
 
+enum GameStates {
+    LOADING,
+    PLAYING,
+    ROUNDOVER
+}
+
 export default function Game() {
     const [how, setHow] = useState<boolean>(true);
     const [board, setBoard] = useState<GoogleImage[]>([]);
@@ -39,6 +45,7 @@ export default function Game() {
     const [updatePoints, setUpdatePoints] = useState<boolean>(false);
     const [score, setScore] = useState<number>(0);
     const [flashRed, setFlashRed] = useState<boolean>(false);
+    const [gameState, setGameState] = useState<GameStates>(GameStates.LOADING);
 
     const handleCreate: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -81,11 +88,13 @@ export default function Game() {
             }
         });
         setIsCreating(false);
+        setGameState(GameStates.PLAYING);
         return validUrls;
     };
 
     const createBoard = (prompt: string) => {
         console.log("Attempting to create board");
+        setGameState(GameStates.LOADING);
         setIsCreating(true);
         create(prompt).then((data) => {
             console.log(data);
@@ -114,6 +123,7 @@ export default function Game() {
                 setScore(score + 100);
                 setDoConfetti(true);
                 setUpdatePoints(true);
+                setGameState(GameStates.ROUNDOVER);
                 setTimeout(() => {
                     setDoConfetti(false);
                     setUpdatePoints(false);
@@ -187,7 +197,7 @@ export default function Game() {
                             {score}
                         </span>
                     </p>
-                    <form onSubmit={handleCreate}>
+                    <form onSubmit={handleCreate} className="flex justify-center items-center flex-col md:flex-row">
                         <input
                             type="text"
                             placeholder="Enter a prompt"
@@ -205,7 +215,7 @@ export default function Game() {
                         </button>
                     </form>
                 </div>
-                <div className="grid grid-flow-row grid-cols-3 gap-x-20 gap-y-10 p-8 pb-2 items-center justify-items-center">
+                <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-20 gap-y-10 p-8 pb-2 items-center justify-items-center">
                     {board.map((img, i) => (
                         <div
                             className={`h-48 w-64 rounded-lg block justify-center items-center `}
@@ -230,7 +240,7 @@ export default function Game() {
                 <div className="w-full flex justify-center">
                     <button
                         className="bg-blue-500 text-white py-2 mx-2 mt-4 font-black px-8 rounded-lg hover:bg-blue-600 duration-500 ease-in-out disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-                        disabled={selectedImage === null}
+                        disabled={selectedImage === null || gameState !== GameStates.PLAYING}
                         onClick={() => {
                             handleSubmit();
                         }}
