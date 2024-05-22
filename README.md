@@ -16,6 +16,6 @@ The API key is the key for OpenAI's DALLE-3 API. The webhook is the webhook for 
 Finally run the following commands:
 
 ```bash
-npm install
-npm run dev
+$ npm install
+$ npm run dev
 ```
