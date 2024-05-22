@@ -6,6 +6,8 @@ import { FaRegImage } from "react-icons/fa6";
 import { create, generate, sendData } from "@/app/game/backend";
 import { AnimatePresence, motion } from "framer-motion";
 import Confetti from "@/components/Confetti";
+import { GiPerspectiveDiceSixFacesRandom } from "react-icons/gi";
+import prompts from "./words";
 
 const delays = [
     "animation-delay-0",
@@ -26,12 +28,12 @@ type GoogleImage = {
 type openAIResponse = {
     revised_prompt?: string;
     url?: string;
-}
+};
 
 enum GameStates {
     LOADING,
     PLAYING,
-    ROUNDOVER
+    ROUNDOVER,
 }
 
 export default function Game() {
@@ -50,6 +52,10 @@ export default function Game() {
         e.preventDefault();
         createBoard(prompt);
     };
+
+    const typewords = (prompt: string) => {
+        setPrompt(prompt);
+    }
 
     const getValidURLS = async (GoogleImages: GoogleImage[]) => {
         const checkUrl = async (image: GoogleImage) => {
@@ -77,7 +83,12 @@ export default function Game() {
         await generate(prompt).then((data: openAIResponse) => {
             console.log(data);
             if (data) {
-                let newImage: GoogleImage = { url: data.url as string, height: 800, width: 600, ai: true };
+                let newImage: GoogleImage = {
+                    url: data.url as string,
+                    height: 800,
+                    width: 600,
+                    ai: true,
+                };
                 validUrls.push(newImage);
 
                 sendData(prompt, validUrls as GoogleImage[], data);
@@ -196,18 +207,28 @@ export default function Game() {
                             {score}
                         </span>
                     </p>
-                    <form onSubmit={handleCreate} className="flex justify-center items-center flex-col md:flex-row">
+                    <form
+                        onSubmit={handleCreate}
+                        className="flex justify-center items-center flex-col md:flex-row"
+                    >
                         <input
                             type="text"
                             placeholder="Enter a prompt"
-                            className="w-96 h-10 m-4 p-2 rounded-lg border-2 border-slate-200"
+                            className="w-96 h-10 m-2 p-2 rounded-lg border-2 border-slate-200"
                             id="prompt"
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
                         />
                         <button
+                            type="button"
+                            className="bg-blue-500 rounded-lg text-white h-10 w-10 mx-2 flex justify-center items-center"
+                            onClick={() => typewords(prompts[Math.floor(Math.random() * prompts.length)])}
+                        >
+                            <GiPerspectiveDiceSixFacesRandom className="h-8 w-8" />
+                        </button>
+                        <button
                             type="submit"
-                            className="bg-green-400 text-white py-2 font-black px-8 rounded-lg hover:bg-green-600 duration-500 ease-in-out disabled:cursor-not-allowed cursor-pointer"
+                            className="bg-green-400 text-white py-2 font-black m-2 px-8 rounded-lg hover:bg-green-600 duration-500 ease-in-out disabled:cursor-not-allowed cursor-pointer"
                             disabled={isCreating || prompt.trim() === ""}
                         >
                             {isCreating ? "Loading..." : "Create Board"}
@@ -239,7 +260,10 @@ export default function Game() {
                 <div className="w-full flex justify-center">
                     <button
                         className="bg-blue-500 text-white py-2 mx-2 mt-4 font-black px-8 rounded-lg hover:bg-blue-600 duration-500 ease-in-out disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
-                        disabled={selectedImage === null || gameState !== GameStates.PLAYING}
+                        disabled={
+                            selectedImage === null ||
+                            gameState !== GameStates.PLAYING
+                        }
                         onClick={() => {
                             handleSubmit();
                         }}
@@ -271,9 +295,7 @@ export default function Game() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.4 }}
                     >
-                        <h2 className="text-white text-5xl font-black">
-                            -50
-                        </h2>
+                        <h2 className="text-white text-5xl font-black">-50</h2>
                     </motion.div>
                 )}
             </AnimatePresence>
