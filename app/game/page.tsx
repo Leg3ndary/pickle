@@ -6,7 +6,6 @@ import { FaRegImage } from "react-icons/fa6";
 import { create, generate, sendData } from "@/app/game/backend";
 import { AnimatePresence, motion } from "framer-motion";
 import Confetti from "@/components/Confetti";
-import { CiSatellite1 } from "react-icons/ci";
 
 const delays = [
     "animation-delay-0",
