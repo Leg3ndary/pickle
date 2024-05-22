@@ -4,6 +4,12 @@ The amazing game also known as pickle.
 
 To run this project first install the latest version of NPM.
 
+Next, clone this repository:
+
+```bash
+$ git clone https://github.com/Leg3ndary/pickle.git
+```
+
 Then create a file called .env.local and add the following kv pairs:
 
 ```env
