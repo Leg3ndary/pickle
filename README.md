@@ -3,7 +3,7 @@
 Pickle is a fun game where users can generate 9 images based on a prompt. One of these images will be based on AI, and it will be up to the user to figure out which image is "fake".
 
 
-# Installation
+## Installation
 
 To install Pickle simply clone the reopsitory 
 
@@ -11,7 +11,7 @@ To install Pickle simply clone the reopsitory
 $ git clone https://github.com/Leg3ndary/pickle.git
 ```
 
-# Running the Project
+## Running the Project
 
 To run this project first install the latest version of [Node.js](https://nodejs.org/en/).
 
@@ -33,10 +33,10 @@ $ npm install
 $ npm run dev
 ```
 
-# Usage
+## Usage
 
 To use Pickle, simply navigate to the game part of the website and click the "New Board" button. This will generate 9 images based on a prompt. One of these images will be based on AI, and it will be up to the user to figure out which image is "fake".
 
-# Contributing
+## Contributing
 
 To contribute to Pickle, simply fork the repository and submit a pull request.
