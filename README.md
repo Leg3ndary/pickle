@@ -1,16 +1,23 @@
-# Pickle
+# 🥒 Pickle
 
-The amazing game also known as pickle.
+Pickle is a fun game where users can generate 9 images based on a prompt. One of these images will be based on AI, and it will be up to the user to figure out which image is "fake".
 
-To run this project first install the latest version of NPM.
 
-Next, clone this repository:
+# Installation
+
+To install Pickle simply clone the reopsitory 
 
 ```bash
 $ git clone https://github.com/Leg3ndary/pickle.git
 ```
 
-Then create a file called .env.local and add the following kv pairs:
+# Running the Project
+
+To run this project first install the latest version of [Node.js](https://nodejs.org/en/).
+
+Afterwards, install the project and follow the following steps.
+
+Create a file called .env.local and add the following kv pairs:
 
 ```env
 apikey="YOUR_API_KEY"
@@ -25,3 +32,11 @@ Finally run the following commands:
 $ npm install
 $ npm run dev
 ```
+
+# Usage
+
+To use Pickle, simply navigate to the game part of the website and click the "New Board" button. This will generate 9 images based on a prompt. One of these images will be based on AI, and it will be up to the user to figure out which image is "fake".
+
+# Contributing
+
+To contribute to Pickle, simply fork the repository and submit a pull request.
